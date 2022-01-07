@@ -24,8 +24,9 @@ jobs:
         run: cd 2.5 && docker build -t docker-2.5 .
 
       - name: Run the built image.
-        run: docker run --name test-haproxy-2.5 -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro docker-2.5
-
+        # run: docker run --name test-haproxy-2.5 -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro docker-2.5
+        run: docker run -it --rm --name haproxy-syntax-check my-haproxy haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg
+        
   # If on master branch, build and release image.
   release:
     name: Release
