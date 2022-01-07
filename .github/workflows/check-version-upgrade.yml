@@ -40,7 +40,7 @@ jobs:
         - uses: actions/checkout@v2
 
         - name: chmod
-          run: chmod +x update.sh
+          run: chmod +x versions.sh && chmod +x update.sh
 
         - name: Update version
           run: ./update.sh
