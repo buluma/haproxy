@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Test CI
+name: Version/Upgrade CI
 
 # Controls when the workflow will run
 on:
@@ -23,14 +23,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-          
-      - name: Run test
-        run: pwd && ls -a
-        
-      - name: chmod
+  
+      - name: chmod versions.sh
         run: chmod +x versions.sh
         
-      - name: run apply template
+      - name: Check Version
         run: ./versions.sh
   update:
       # The type of runner that the job will run on
@@ -42,11 +39,8 @@ jobs:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         - uses: actions/checkout@v2
 
-        - name: Run test
-          run: pwd && ls -a
-
         - name: chmod
-          run: chmod +x versions.sh
+          run: chmod +x update.sh
 
-        - name: run apply template
-          run: ./versions.sh
+        - name: Update version
+          run: ./update.sh
