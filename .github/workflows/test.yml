@@ -36,4 +36,10 @@ jobs:
           echo test, and deploy your project.
           
       - name: Run test
-        run: pwd && ls -a && sh apply-templates.sh
+        run: pwd && ls -a && 
+        
+      - name: chmod
+        run: chmod +x apply-templates.sh
+        
+      - name: run apply template
+        run: ./apply-templates.sh
