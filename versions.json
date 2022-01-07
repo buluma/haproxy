@@ -1,0 +1,58 @@
+{
+  "1.7": {
+    "alpine": "3.12",
+    "debian": "buster-slim",
+    "sha256": "1f9fb6c5a342803037a622c7dd04702b0d010a88b5c3922cd3da71a34f3377a4",
+    "url": "https://www.haproxy.org/download/1.7/src/haproxy-1.7.14.tar.gz",
+    "version": "1.7.14"
+  },
+  "1.8": {
+    "alpine": "3.15",
+    "debian": "buster-slim",
+    "sha256": "066bfd9a0e5a3550fa621886a132379e5331d0c377e11f38bb6e8dfbec92be42",
+    "url": "https://www.haproxy.org/download/1.8/src/haproxy-1.8.30.tar.gz",
+    "version": "1.8.30"
+  },
+  "2.0": {
+    "alpine": "3.15",
+    "debian": "buster-slim",
+    "sha256": "13ac74719a8b418cc346495fc7dfcbdd135be18aecb6a5083c801b234ad3dd47",
+    "url": "https://www.haproxy.org/download/2.0/src/haproxy-2.0.26.tar.gz",
+    "version": "2.0.26"
+  },
+  "2.2": {
+    "alpine": "3.15",
+    "debian": "bullseye-slim",
+    "sha256": "972e5a422dec3d9d01eb341eabd57d2d17d0e56e17d95d5c4c28b37b9c8aba12",
+    "url": "https://www.haproxy.org/download/2.2/src/haproxy-2.2.19.tar.gz",
+    "version": "2.2.19"
+  },
+  "2.3": {
+    "alpine": "3.15",
+    "debian": "bullseye-slim",
+    "sha256": "7a26c8a58dd6be9c7f5e8c89d85b3c8ef4f9825109c0d5fc8ff56b7d6d254320",
+    "url": "https://www.haproxy.org/download/2.3/src/haproxy-2.3.16.tar.gz",
+    "version": "2.3.16"
+  },
+  "2.4": {
+    "alpine": "3.15",
+    "debian": "bullseye-slim",
+    "sha256": "d56c7fe3c5afedd1b9a19e1b7f8f954feaf50a9c2f205f99891043858b72a763",
+    "url": "https://www.haproxy.org/download/2.4/src/haproxy-2.4.9.tar.gz",
+    "version": "2.4.9"
+  },
+  "2.5": {
+    "alpine": "3.15",
+    "debian": "bullseye-slim",
+    "sha256": "16a5ed6256ca3670e41b76366a892b08485643204a3ce72b6e7a2d9a313aa225",
+    "url": "https://www.haproxy.org/download/2.5/src/haproxy-2.5.0.tar.gz",
+    "version": "2.5.0"
+  },
+  "2.6-rc": {
+    "alpine": "3.15",
+    "debian": "bullseye-slim",
+    "sha256": "b05c04938f069ed39aaf00ba5bff9aa02d0f963c64e7b350a3cad04011ef4d93",
+    "url": "https://www.haproxy.org/download/2.6/src/devel/haproxy-2.6-dev0.tar.gz",
+    "version": "2.6-dev0"
+  }
+}
