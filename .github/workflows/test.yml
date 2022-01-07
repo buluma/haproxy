@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Test CI
 
 # Controls when the workflow will run
 on:
@@ -36,4 +36,4 @@ jobs:
           echo test, and deploy your project.
           
       - name: Run test
-        run: pwd && ls -a
+        run: pwd && ls -a && sh apply-templates.sh
