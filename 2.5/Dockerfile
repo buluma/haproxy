@@ -6,6 +6,8 @@
 
 FROM debian:bullseye-slim
 
+COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+
 # roughly, https://salsa.debian.org/haproxy-team/haproxy/-/blob/732b97ae286906dea19ab5744cf9cf97c364ac1d/debian/haproxy.postinst#L5-6
 RUN set -eux; \
 	groupadd --gid 99 --system haproxy; \
