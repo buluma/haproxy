@@ -6,9 +6,6 @@
 
 FROM debian:bullseye-slim
 
-COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
-COPY docker-entrypoint.sh /usr/local/bin/
-
 # roughly, https://salsa.debian.org/haproxy-team/haproxy/-/blob/732b97ae286906dea19ab5744cf9cf97c364ac1d/debian/haproxy.postinst#L5-6
 RUN set -eux; \
 	groupadd --gid 99 --system haproxy; \
@@ -89,16 +86,25 @@ RUN set -eux; \
 # smoke test
 	haproxy -v
 
+RUN mkdir -p /var/lib/haproxy/.ssh && \  
+chmod 0700 /var/lib/haproxy/.ssh   
+COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+RUN  mkdir  /var/lib/haproxy/stats && chmod 777 /var/lib/haproxy/stats  && chown haproxy: /var/lib/haproxy/stats
+#RUN setcap 'cap_net_bind_service=+ep' /usr/local/sbin/haproxy
+CMD ssh-keygen -t rsa -f /var/lib/haproxy/.ssh/id_rsa -q -P ""
+#RUN cp authorized_keys /var/lib/haproxy/.ssh/authorized_keys
+
 # https://www.haproxy.org/download/1.8/doc/management.txt
 # "4. Stopping and restarting HAProxy"
 # "when the SIGTERM signal is sent to the haproxy process, it immediately quits and all established connections are closed"
 # "graceful stop is triggered when the SIGUSR1 signal is sent to the haproxy process"
 STOPSIGNAL SIGUSR1
 
+COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-
-EXPOSE 8080
-
+EXPOSE 80 
+EXPOSE 8080 
 USER haproxy
+CMD ssh-keygen -q -t rsa -N '' -P "" -f  /var/lib/haproxy/.ssh/id_rsa
 CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
