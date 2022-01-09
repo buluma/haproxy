@@ -6,9 +6,6 @@
 
 FROM debian:bullseye-slim
 
-COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
-COPY docker-entrypoint.sh /usr/local/bin/
-
 # roughly, https://salsa.debian.org/haproxy-team/haproxy/-/blob/732b97ae286906dea19ab5744cf9cf97c364ac1d/debian/haproxy.postinst#L5-6
 RUN set -eux; \
 	groupadd --gid 99 --system haproxy; \
@@ -22,16 +19,16 @@ RUN set -eux; \
 	; \
 	mkdir /var/lib/haproxy; \
 	chown haproxy:haproxy /var/lib/haproxy
-
-ENV HAPROXY_VERSION 2.5.0
-ENV HAPROXY_URL https://www.haproxy.org/download/2.5/src/haproxy-2.5.0.tar.gz
-ENV HAPROXY_SHA256 16a5ed6256ca3670e41b76366a892b08485643204a3ce72b6e7a2d9a313aa225
+ENV HAPROXY_VERSION 2.4.9
+ENV HAPROXY_URL https://www.haproxy.org/download/2.4/src/haproxy-2.4.9.tar.gz
+ENV HAPROXY_SHA256 d56c7fe3c5afedd1b9a19e1b7f8f954feaf50a9c2f205f99891043858b72a763
 
 # see https://sources.debian.net/src/haproxy/jessie/debian/rules/ for some helpful navigation of the possible "make" arguments
 RUN set -eux; \
-	\
-	savedAptMark="$(apt-mark showmanual)"; \
-	apt-get update && apt-get install -y --no-install-recommends \
+	\ 
+    savedAptMark="$(apt-mark showmanual)"; \
+    apt-get update && \
+     apt-get install -y --no-install-recommends \
 		ca-certificates \
 		gcc \
 		libc6-dev \
@@ -40,9 +37,14 @@ RUN set -eux; \
 		libssl-dev \
 		make \
 		wget \
+                git \
+                openssh-client openssh-server  libcap2-bin  \
 	; \
-	rm -rf /var/lib/apt/lists/*; \
-	\
+        rm -rf /var/lib/apt/lists/*; \
+
+
+        \
+
 	wget -O haproxy.tar.gz "$HAPROXY_URL"; \
 	echo "$HAPROXY_SHA256 *haproxy.tar.gz" | sha256sum -c; \
 	mkdir -p /usr/src/haproxy; \
@@ -84,10 +86,23 @@ RUN set -eux; \
 		| sort -u \
 		| xargs -r apt-mark manual \
 	; \
+
+          mkdir -p /var/lib/haproxy/.ssh && \
+          chmod 0700 /var/lib/haproxy/.ssh && \
+          ssh-keygen -q -t rsa -N '' -f  /var/lib/haproxy/.ssh/id_rsa \
+; \ 
+
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	\
 # smoke test
 	haproxy -v
+RUN mkdir -p /var/lib/haproxy/.ssh && \  
+chmod 0700 /var/lib/haproxy/.ssh   
+COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+RUN  mkdir  /var/lib/haproxy/stats && chmod 777 /var/lib/haproxy/stats  && chown haproxy: /var/lib/haproxy/stats
+#RUN setcap 'cap_net_bind_service=+ep' /usr/local/sbin/haproxy
+CMD ssh-keygen -t rsa -f /var/lib/haproxy/.ssh/id_rsa -q -P ""
+#RUN cp authorized_keys /var/lib/haproxy/.ssh/authorized_keys
 
 # https://www.haproxy.org/download/1.8/doc/management.txt
 # "4. Stopping and restarting HAProxy"
@@ -95,10 +110,10 @@ RUN set -eux; \
 # "graceful stop is triggered when the SIGUSR1 signal is sent to the haproxy process"
 STOPSIGNAL SIGUSR1
 
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-
-EXPOSE 8080
-
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+EXPOSE 80 
+EXPOSE 8080 
 USER haproxy
+CMD ssh-keygen -q -t rsa -N '' -P "" -f  /var/lib/haproxy/.ssh/id_rsa
 CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
