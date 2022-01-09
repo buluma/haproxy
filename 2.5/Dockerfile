@@ -98,5 +98,7 @@ STOPSIGNAL SIGUSR1
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
+EXPOSE 8080
+
 USER haproxy
 CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
