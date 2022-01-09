@@ -24,8 +24,7 @@ jobs:
         run: cd 2.4 && docker build -t haproxy-2.4 .
 
       - name: Run the built image.
-       # run: docker run -i --rm --name haproxy-syntax-check haproxy-2.4 haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg
-        run: docker run -i --rm --name haproxy-syntax-check haproxy-2.4 haproxy
+        run: docker run -i --rm --name haproxy-syntax-check haproxy-2.4 haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg
         
       - name: Run the container 
         run: docker run -d --name my-running-haproxy-2.4 --sysctl net.ipv4.ip_unprivileged_port_start=0 haproxy-2.4
