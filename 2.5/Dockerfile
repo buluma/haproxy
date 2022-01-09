@@ -95,7 +95,7 @@ RUN set -eux; \
 # "graceful stop is triggered when the SIGUSR1 signal is sent to the haproxy process"
 STOPSIGNAL SIGUSR1
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 USER haproxy
 CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
