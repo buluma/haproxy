@@ -24,10 +24,9 @@ jobs:
         run: cd 2.5 && docker build -t haproxy-2.5 .
 
       - name: Run the built image.
-        # run: docker run --name test-haproxy-2.5 -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro docker-2.5
         run: docker run -i --rm --name haproxy-syntax-check haproxy-2.5 haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg
         
-      - name: Build the container 
+      - name: Run the container 
         run: docker run -d --name my-running-haproxy-2.5 --sysctl net.ipv4.ip_unprivileged_port_start=0 haproxy-2.5
         
   # If on master branch, build and release image.
