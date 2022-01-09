@@ -7,6 +7,7 @@
 FROM debian:bullseye-slim
 
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+COPY docker-entrypoint.sh /usr/local/bin/
 
 # roughly, https://salsa.debian.org/haproxy-team/haproxy/-/blob/732b97ae286906dea19ab5744cf9cf97c364ac1d/debian/haproxy.postinst#L5-6
 RUN set -eux; \
@@ -94,8 +95,6 @@ RUN set -eux; \
 # "graceful stop is triggered when the SIGUSR1 signal is sent to the haproxy process"
 STOPSIGNAL SIGUSR1
 
-RUN ls -a && chmod +x docker-entrypoint.sh
-COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 USER haproxy
