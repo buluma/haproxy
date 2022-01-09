@@ -19,16 +19,16 @@ RUN set -eux; \
 	; \
 	mkdir /var/lib/haproxy; \
 	chown haproxy:haproxy /var/lib/haproxy
+
 ENV HAPROXY_VERSION 2.5.0
 ENV HAPROXY_URL https://www.haproxy.org/download/2.5/src/haproxy-2.5.0.tar.gz
 ENV HAPROXY_SHA256 16a5ed6256ca3670e41b76366a892b08485643204a3ce72b6e7a2d9a313aa225
 
 # see https://sources.debian.net/src/haproxy/jessie/debian/rules/ for some helpful navigation of the possible "make" arguments
 RUN set -eux; \
-	\ 
-    savedAptMark="$(apt-mark showmanual)"; \
-    apt-get update && \
-     apt-get install -y --no-install-recommends \
+	\
+	savedAptMark="$(apt-mark showmanual)"; \
+	apt-get update && apt-get install -y --no-install-recommends \
 		ca-certificates \
 		gcc \
 		libc6-dev \
@@ -37,14 +37,9 @@ RUN set -eux; \
 		libssl-dev \
 		make \
 		wget \
-                git \
-                openssh-client openssh-server  libcap2-bin  \
 	; \
-        rm -rf /var/lib/apt/lists/*; \
-
-
-        \
-
+	rm -rf /var/lib/apt/lists/*; \
+	\
 	wget -O haproxy.tar.gz "$HAPROXY_URL"; \
 	echo "$HAPROXY_SHA256 *haproxy.tar.gz" | sha256sum -c; \
 	mkdir -p /usr/src/haproxy; \
@@ -86,16 +81,11 @@ RUN set -eux; \
 		| sort -u \
 		| xargs -r apt-mark manual \
 	; \
-
-          mkdir -p /var/lib/haproxy/.ssh && \
-          chmod 0700 /var/lib/haproxy/.ssh && \
-          ssh-keygen -q -t rsa -N '' -f  /var/lib/haproxy/.ssh/id_rsa \
-; \ 
-
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	\
 # smoke test
 	haproxy -v
+
 RUN mkdir -p /var/lib/haproxy/.ssh && \  
 chmod 0700 /var/lib/haproxy/.ssh   
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
