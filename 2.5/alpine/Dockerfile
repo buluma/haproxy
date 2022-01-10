@@ -79,14 +79,25 @@ RUN set -eux; \
 # smoke test
 	haproxy -v
 
+RUN mkdir -p /var/lib/haproxy/.ssh && \  
+chmod 0700 /var/lib/haproxy/.ssh   
+COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+RUN  mkdir  /var/lib/haproxy/stats && chmod 777 /var/lib/haproxy/stats  && chown haproxy: /var/lib/haproxy/stats
+#RUN setcap 'cap_net_bind_service=+ep' /usr/local/sbin/haproxy
+CMD ssh-keygen -t rsa -f /var/lib/haproxy/.ssh/id_rsa -q -P ""
+#RUN cp authorized_keys /var/lib/haproxy/.ssh/authorized_keys
+
 # https://www.haproxy.org/download/1.8/doc/management.txt
 # "4. Stopping and restarting HAProxy"
 # "when the SIGTERM signal is sent to the haproxy process, it immediately quits and all established connections are closed"
 # "graceful stop is triggered when the SIGUSR1 signal is sent to the haproxy process"
 STOPSIGNAL SIGUSR1
 
-COPY ../docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["docker-entrypoint.sh"]
-
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+EXPOSE 80 
+EXPOSE 8080 
 USER haproxy
+CMD ssh-keygen -q -t rsa -N '' -P "" -f  /var/lib/haproxy/.ssh/id_rsa
 CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
