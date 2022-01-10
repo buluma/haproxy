@@ -54,4 +54,4 @@ jobs:
           file: 2.5/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ${{ github.repository }}:2.5
+          tags: ${{ github.repository }}:2.5, ${{ github.repository }}:latest, ${{ github.repository }}:bullseye
