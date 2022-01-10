@@ -104,8 +104,8 @@ CMD ssh-keygen -t rsa -f /var/lib/haproxy/.ssh/id_rsa -q -P ""
 STOPSIGNAL SIGUSR1
 
 COPY docker-entrypoint.sh /usr/local/bin/
-RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
-ENTRYPOINT ["docker-entrypoint.sh"]
+RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compatibility
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 # no USER for backwards compatibility (to try to avoid breaking existing users)
 CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
