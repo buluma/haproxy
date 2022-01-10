@@ -1,26 +1,20 @@
-global
-  stats socket /var/lib/haproxy/stats/haproxy.sock  user haproxy group haproxy mode 660 level admin expose-fd listeners
-  log stdout format raw local0 info
+FROM internavenue/centos-base:centos7
 
-defaults
-  mode http
-  timeout client 10s
-  timeout connect 5s
-  timeout server 10s
-  timeout http-request 10s
-  log global
+MAINTAINER Intern Avenue Dev Team <dev@internavenue.com>
 
-frontend stats
-  bind *:8404
-  stats enable
-  stats uri /
-  stats refresh 10s
+RUN yum -y install haproxy
 
-frontend myfrontend
-  bind *:8080
-  default_backend webservers
+# Clean up YUM when done.
+RUN yum clean all
 
-backend webservers
-  server s1 172.17.0.3:80 check
-  #server s2 127.0.0.1:8080 check
-  #server s3 127.0.0.1:8080 check
+ADD scripts /scripts
+RUN chmod +x /scripts/start.sh
+RUN touch /first_run
+
+EXPOSE 80 443 22
+
+# Expose our web root and log directories log.
+VOLUME ["/vagrant", "/run", "/var/lib/haproxy", "/var/log"]
+
+# Kicking in
+CMD ["/scripts/start.sh"]
