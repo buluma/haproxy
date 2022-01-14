@@ -52,6 +52,6 @@ jobs:
         with:
           context: 2.2/
           file: 2.2/Dockerfile
-          platforms: llinux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ github.repository }}:2.2
