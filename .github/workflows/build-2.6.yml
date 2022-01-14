@@ -52,6 +52,6 @@ jobs:
         with:
           context: 2.6-rc/
           file: 2.6-rc/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ github.repository }}:2.6, ${{ github.repository }}:2.6-dev-bullseye, ${{ github.repository }}:2.6-dev
