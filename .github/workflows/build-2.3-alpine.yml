@@ -1,5 +1,5 @@
 ---
-name: Build 2.4.12-alpine
+name: Build 2.3.12-alpine
 
 on:
   pull_request:
