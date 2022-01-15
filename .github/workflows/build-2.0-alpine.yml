@@ -1,12 +1,12 @@
 ---
-name: Build 2.6-dev-alpine
+name: Build 2.0.26-alpine
 
 on:
   pull_request:
   push:
     paths:
-      - '2.6/alpine/**'
-      - '.github/workflows/build-2.6-alpine.yml'
+      - '2.0/alpine/**'
+      - '.github/workflows/build-2.0-alpine.yml'
   schedule:
     - cron: '40 *,* * * *'
   workflow_dispatch:
@@ -21,13 +21,13 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Test building image.
-        run: cd 2.6-rc && cd alpine && docker build -t haproxy-2.6-alpine .
+        run: cd 2.0 && cd alpine && docker build -t haproxy-2.0-alpine .
 
       - name: Run the built image.
-        run: docker run -i --rm --name haproxy-syntax-check haproxy-2.6-alpine haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg
+        run: docker run -i --rm --name haproxy-syntax-check haproxy-2.0-alpine haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg
         
-      - name: Run the container. 
-        run: docker run -d --name my-running-haproxy-2.6-alpine --sysctl net.ipv4.ip_unprivileged_port_start=0 haproxy-2.6-alpine
+      - name: Run the container.
+        run: docker run -d --name my-running-haproxy-2.0-alpine --sysctl net.ipv4.ip_unprivileged_port_start=0 haproxy-2.0-alpine
         
   # If on master branch, build and release image.
   release:
@@ -50,8 +50,8 @@ jobs:
       - name: Build and push image.
         uses: docker/build-push-action@v2
         with:
-          context: 2.6-rc/alpine/
-          file: 2.6-rc/alpine/Dockerfile
+          context: 2.0/alpine/
+          file: 2.0/alpine/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ github.repository }}:2.6-dev0-alpine, ${{ github.repository }}:2.6-dev-alpine
+          tags: ${{ github.repository }}:2.0.26-alpine, ${{ github.repository }}:2.0-alpine
