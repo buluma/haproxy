@@ -1,5 +1,5 @@
 ---
-name: Build 2.3-bullseye-slim
+name: Build 2.3-bullseye
 
 on:
   pull_request:
