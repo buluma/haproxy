@@ -1,5 +1,5 @@
 ---
-name: Build 2.0-bullseye-slim
+name: Build 2.0-buster
 
 on:
   pull_request:
@@ -54,4 +54,4 @@ jobs:
           file: 2.0/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ github.repository }}:2.0
+          tags: ${{ github.repository }}:2.0, ${{ github.repository }}:2.0-buster
