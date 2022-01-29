@@ -20,9 +20,9 @@ RUN set -eux; \
 	mkdir /var/lib/haproxy; \
 	chown haproxy:haproxy /var/lib/haproxy
 
-ENV HAPROXY_VERSION 2.3.16
-ENV HAPROXY_URL https://www.haproxy.org/download/2.3/src/haproxy-2.3.16.tar.gz
-ENV HAPROXY_SHA256 7a26c8a58dd6be9c7f5e8c89d85b3c8ef4f9825109c0d5fc8ff56b7d6d254320
+ENV HAPROXY_VERSION 2.3.17
+ENV HAPROXY_URL https://www.haproxy.org/download/2.3/src/haproxy-2.3.17.tar.gz
+ENV HAPROXY_SHA256 27b4ca300ef2b4de0dbd3e8dc24f476467c17d740081c2bfab360ad788943a0b
 
 # see https://sources.debian.net/src/haproxy/jessie/debian/rules/ for some helpful navigation of the possible "make" arguments
 RUN set -eux; \
@@ -89,14 +89,6 @@ RUN set -eux; \
 # smoke test
 	haproxy -v
 
-RUN mkdir -p /var/lib/haproxy/.ssh && \  
-chmod 0700 /var/lib/haproxy/.ssh   
-COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
-RUN  mkdir  /var/lib/haproxy/stats && chmod 777 /var/lib/haproxy/stats  && chown haproxy: /var/lib/haproxy/stats
-#RUN setcap 'cap_net_bind_service=+ep' /usr/local/sbin/haproxy
-CMD ssh-keygen -t rsa -f /var/lib/haproxy/.ssh/id_rsa -q -P ""
-#RUN cp authorized_keys /var/lib/haproxy/.ssh/authorized_keys
-
 # https://www.haproxy.org/download/1.8/doc/management.txt
 # "4. Stopping and restarting HAProxy"
 # "when the SIGTERM signal is sent to the haproxy process, it immediately quits and all established connections are closed"
@@ -104,8 +96,8 @@ CMD ssh-keygen -t rsa -f /var/lib/haproxy/.ssh/id_rsa -q -P ""
 STOPSIGNAL SIGUSR1
 
 COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # no USER for backwards compatibility (to try to avoid breaking existing users)
 CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
