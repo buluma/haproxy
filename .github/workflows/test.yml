@@ -1,0 +1,30 @@
+---
+name: Build centos-test
+
+on:
+  pull_request:
+  push:
+    paths:
+      - 'centos/test/**'
+      - '.github/workflows/test.yml'
+  schedule:
+    - cron: '40 *,* * * *'
+  workflow_dispatch:
+
+jobs:
+  # Test the image builds and works correctly.
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Test building image.
+        run: cd centos && cd test && docker build -t haproxy-centos .
+
+      - name: Run the built image.
+        run: docker run -i --rm --name haproxy-syntax-check haproxy-centos haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg
+        
+      - name: Run the container 
+        run: docker run -d --name my-running-haproxy-centos --sysctl net.ipv4.ip_unprivileged_port_start=0 haproxy-centos
